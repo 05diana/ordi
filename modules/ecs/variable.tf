@@ -1,0 +1,19 @@
+
+variable "vpc_id" {}
+variable "region" {}
+variable "project" {}
+variable "db_name" {}
+variable "db_user" {}
+variable "vpc_cidr" {}
+variable "environment" {}
+variable "domain_name" {}
+variable "db_password" {}
+variable "ecr_base_url" {}
+variable "dynamic_hosts" {}
+variable "micro_services" {}
+variable "certificate_arn" {}
+variable "statics_hosts_min" {}
+variable "statics_hosts_max" {}
+variable "public_subnet_ids" {}
+variable "private_subnet_ids" {}
+variable "db_security_group_id" {}

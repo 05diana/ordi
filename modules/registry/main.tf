@@ -32,10 +32,8 @@ module "registry" {
 
   tags = {
     Terraform     = "true"
-    Projectname   = var.project
-    Environment   = var.environment
+    Environment   = terraform.workspace
     MicroServicio = "${each.key}-ms"
-    Name          = "${var.environment}-ecr"
   }
 }
 
@@ -49,7 +47,7 @@ resource "null_resource" "docker_build_push" {
       aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${module.registry[each.key].repository_url}
       docker push ${module.registry[each.key].repository_url}
       docker logout
-      docker rmi ${module.registry[each.key].repository_url}
+      # docker rmi ${module.registry[each.key].repository_url}
     EOT
   }
 

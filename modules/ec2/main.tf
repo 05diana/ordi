@@ -3,16 +3,19 @@ module "ec2_instance" {
   source = "terraform-aws-modules/ec2-instance/aws"
 
   create                      = true
-  name                        = "${var.environment}-${var.project}-bastion-host"
-  instance_type               = "t2.micro"
-  vpc_security_group_ids      = [aws_security_group.bastion_sg.id]
-  subnet_id                   = var.public_subnet_ids[0]
+  name                        = "${terraform.workspace}-bastion"
+  instance_type               = "t2.nano"
   associate_public_ip_address = true
+  subnet_id                   = var.public_subnet_ids[0]
+  vpc_security_group_ids = [
+    var.ssh_sg_id,
+    var.postgresql_sg_id,
+  ]
 
   user_data = <<EOF
 #!/bin/bash
 yum install -y nc tmux
-amazon-linux-extras install -y postgresql14
+amazon-linux-extras install -y postgresql14 ansible2
 mkdir -p /home/ec2-user/.ssh
 cat <<EOK>> /home/ec2-user/.ssh/authorized_keys
 ${join("\n", var.ssh_keys)}
@@ -24,8 +27,6 @@ chmod 400 /home/ec2-user/.ssh/authorized_keys
 
   tags = {
     Terraform   = "true"
-    Projectname = var.project
-    Environment = var.environment
-    Name        = "${var.environment}-bastion-hosts"
+    Environment = terraform.workspace
   }
 }

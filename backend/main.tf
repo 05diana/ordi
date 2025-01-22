@@ -4,12 +4,12 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "tfstate" {
-  bucket        = "tfstate-fsri2eg-ecs-lwwjdattfsri2egsjecb2sdpufiusipyg15edqu888"
+  bucket        = "tfstate-ordi-io4wdpklwwjdattfsri2egsjecb2sdpufiusipyg15edqu8oo"
   force_destroy = true
 
   tags = {
-    Name        = "tfstate-cicd"
-    Environment = "dev"
+    Project   = "ordi"
+    Terraform = "true"
   }
 }
 
@@ -31,7 +31,7 @@ resource "aws_dynamodb_table" "tfstate_locking" {
   }
 
   tags = {
-    Name        = "tfstate-locking"
-    Environment = "dev"
+    Project   = "ordi"
+    Terraform = "true"
   }
 }

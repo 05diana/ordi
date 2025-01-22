@@ -2,7 +2,7 @@
 
 FROM alpine
 
-ARG VERSION='4.0'
+ARG VERSION='0.0'
 ARG MICROSRV='fastapi'
 
 RUN apk --update --no-cache upgrade && apk --no-cache add thttpd && \

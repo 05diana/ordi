@@ -10,16 +10,6 @@ variable "region" {
   }
 }
 
-variable "project" {
-  description = "Project name"
-  default     = "xeic0ohe"
-  type        = string
-  validation {
-    condition     = can(regex("^[a-z0-9]{4,22}$", var.project))
-    error_message = "The project name must be 4 to 22 characters long and contain only lowercase letters and numbers."
-  }
-}
-
 variable "environment" {
   description = "Environment Name (dev, prod)"
   type        = string
@@ -27,6 +17,11 @@ variable "environment" {
   validation {
     condition     = can(regex("^(dev|pr[do])[a-z0-9]{0,9}$", var.environment))
     error_message = "The environment name must start with 'dev', 'pro', or 'prd', followed by up to 9 lowercase letters or numbers, with a total length between 3 and 12 characters."
+  }
+
+  validation {
+    condition     = terraform.workspace == var.environment
+    error_message = "Invalid workspace: The active workspace '${terraform.workspace}' does not match the specified environment '${var.environment}'."
   }
 }
 

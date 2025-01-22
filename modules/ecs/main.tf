@@ -2,7 +2,7 @@
 module "ecs" {
   source = "terraform-aws-modules/ecs/aws"
 
-  cluster_name = "${var.environment}-${var.project}-ecs_cluster"
+  cluster_name = "${terraform.workspace}-ecs_cluster"
 
   fargate_capacity_providers = {
     FARGATE = {
@@ -34,12 +34,12 @@ module "ecs" {
           environment = [
             { name = "DB_USER", value = var.db_user },
             { name = "DB_NAME", value = var.db_name },
-            { name = "DB_PASSWORD", value = var.db_password }
+            { name = "DB_PASS", value = var.db_pass },
           ]
 
           port_mappings = [
             {
-              name          = "httpd"
+              name          = "http"
               protocol      = "tcp"
               containerPort = 80
             }
@@ -47,11 +47,8 @@ module "ecs" {
         }
       }
 
-      security_groups = [
-        var.db_security_group_id
-      ]
-
       subnet_ids = var.private_subnet_ids
+
       security_group_rules = {
         alb_ingress = {
           type        = "ingress"
@@ -68,7 +65,7 @@ module "ecs" {
           to_port                  = 5432
           protocol                 = "tcp"
           description              = "Postgres Service"
-          source_security_group_id = var.db_security_group_id
+          source_security_group_id = var.postgresql_sg_id
         }
 
         egress_all = {
@@ -92,8 +89,7 @@ module "ecs" {
 
   tags = {
     Terraform   = "true"
-    Projectname = var.project
-    Environment = var.environment
+    Environment = terraform.workspace
   }
 
   depends_on = [module.alb]
@@ -108,7 +104,7 @@ module "alb" {
   vpc_id                     = var.vpc_id
   load_balancer_type         = "application"
   subnets                    = var.public_subnet_ids
-  name                       = "${each.key}-${var.environment}-${var.project}-alb"
+  name                       = "${each.key}-${terraform.workspace}-alb"
   enable_deletion_protection = false
 
   security_group_ingress_rules = {
@@ -166,8 +162,8 @@ module "alb" {
   }
 
   tags = {
-    Environment = var.environment
-    Project     = var.project
+    Terraform   = "true"
+    Environment = terraform.workspace
   }
 }
 
@@ -179,7 +175,7 @@ module "route53_A_to_CNAME_records" {
   zone_name = var.domain_name
   records = [
     {
-      name = "${each.key}-${var.environment}"
+      name = "${each.key}-${terraform.workspace}"
       type = "A"
       alias = {
         name                   = module.alb[each.key].dns_name

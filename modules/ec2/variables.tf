@@ -1,7 +1,5 @@
 
-variable "vpc_id" {}
-variable "project" {}
-variable "vpc_cidr" {}
 variable "ssh_keys" {}
-variable "environment" {}
+variable "ssh_sg_id" {}
+variable "postgresql_sg_id" {}
 variable "public_subnet_ids" {}

@@ -2,7 +2,7 @@
 
 FROM alpine
 
-ARG VERSION='1.0'
+ARG VERSION='0.0'
 ARG MICROSRV='django'
 
 RUN apk --update --no-cache upgrade && apk --no-cache add thttpd && \

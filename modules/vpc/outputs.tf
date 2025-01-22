@@ -1,9 +1,22 @@
 
-data "aws_availability_zones" "available" {}
+output "availability_zones" {
+  description = "Avaulability Zones List"
+  value       = module.vpc.azs
+}
 
 output "vpc_id" {
-  description = "VPC ID Created"
+  description = "VPC ID"
   value       = module.vpc.vpc_id
+}
+
+output "vpc_arn" {
+  description = "VPC ARN"
+  value       = module.vpc.vpc_arn
+}
+
+output "vpc_cidr" {
+  description = "VPC CIDR"
+  value       = module.vpc.vpc_cidr_block
 }
 
 output "public_subnet_ids" {
@@ -11,9 +24,14 @@ output "public_subnet_ids" {
   value       = module.vpc.public_subnets
 }
 
+output "public_subnet_arns" {
+  description = "Public Subnts ARNs list"
+  value       = module.vpc.public_subnet_arns
+}
+
 output "public_subnet_cidrs" {
   description = "Public Subnts CIDR list"
-  value       = local.public_subnets
+  value       = module.vpc.public_subnets_cidr_blocks
 }
 
 output "private_subnet_ids" {
@@ -21,22 +39,27 @@ output "private_subnet_ids" {
   value       = module.vpc.private_subnets
 }
 
+output "private_subnet_arns" {
+  description = "Private Subnts ARNs list"
+  value       = module.vpc.public_subnet_arns
+}
+
 output "private_subnet_cidrs" {
   description = "Private Subnts CIDR list"
-  value       = local.private_subnets
+  value       = module.vpc.private_subnets_cidr_blocks
 }
 
-output "internet_gateway_id" {
-  description = "Internet Gateway ID"
-  value       = module.vpc.igw_id
+output "database_subnet_ids" {
+  description = "DataBase Subnts IDs list"
+  value       = module.vpc.database_subnets
 }
 
-output "availability_zones" {
-  description = "Availability zones list"
-  value       = local.azs
+output "database_subnet_arns" {
+  description = "DataBase Subnts ARNs list"
+  value       = module.vpc.database_subnet_arns
 }
 
-output "db_security_group_id" {
-  description = "RDS Security Group ID"
-  value       = aws_security_group.rds_sg.id
+output "database_subnet_cidrs" {
+  description = "DataBase Subnts CIDR list"
+  value       = module.vpc.database_subnets_cidr_blocks
 }
